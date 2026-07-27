@@ -1,9 +1,7 @@
+import AppLayout from './layouts/AppLayout'
+
 function App() {
-  return (
-    <main>
-      <h1>Fivetran AI Chat</h1>
-    </main>
-  )
+  return <AppLayout />
 }
 
 export default App
