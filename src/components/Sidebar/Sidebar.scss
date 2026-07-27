@@ -3,6 +3,16 @@
   flex-direction: column;
   height: 100%;
 
+  &__new-chat-button {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 24px 0;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
   &__navigation {
     flex: 1;
   }

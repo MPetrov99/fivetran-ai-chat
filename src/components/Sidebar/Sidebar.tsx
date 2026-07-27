@@ -1,20 +1,69 @@
+// -----------------------------------------------------------------------------
+// Component: Sidebar
+//
+// Responsibility:
+// Displays the application's navigation including recent chats,
+// the "New Chat" button and the current user section.
+//
+// Receives:
+// None
+//
+// Used by:
+// AppLayout
+// -----------------------------------------------------------------------------
+
+import { useState } from 'react'
 import './Sidebar.scss'
+import ChatItem from '../ChatItem/ChatItem'
+import { initialChats } from '../../data/chats'
 
 function Sidebar() {
+  const [chats, setChats] = useState(initialChats)
+
+  function handleChatClick(clickedChatId: number) {
+    const updatedChats = chats.map((chat) => ({
+      ...chat,
+      isActive: chat.id === clickedChatId
+    }))
+
+    setChats(updatedChats)
+  }
+
+  function handleNewChat() {
+    const inactiveChats = chats.map((chat) => ({
+      ...chat,
+      isActive: false
+    }))
+
+    const newChat = {
+      id: Date.now(),
+      title: 'New Chat',
+      isActive: true
+    }
+
+    setChats([newChat, ...inactiveChats])
+  }
+
   return (
     <aside className="sidebar" aria-label="Chat navigation">
       <header className="sidebar__header">
         <h1 className="sidebar__title">AI Chat</h1>
       </header>
 
-      <button className="sidebar__new-chat-button" type="button">
+      <button
+        className="sidebar__new-chat-button"
+        type="button"
+        onClick={handleNewChat}
+      >
         New Chat
       </button>
 
       <nav className="sidebar__navigation" aria-label="Previous chats">
         <h2 className="sidebar__section-title">Recent Chats</h2>
 
-        <p className="sidebar__empty-state">No previous chats yet.</p>
+        {chats.map((chat) => (
+          <ChatItem key={chat.id} chat={chat} onChatClick={handleChatClick} />
+        ))}
       </nav>
 
       <footer className="sidebar__footer">
