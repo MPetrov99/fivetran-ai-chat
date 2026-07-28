@@ -36,6 +36,7 @@ type ChatItemProps = {
   onRenameStart: (id: number) => void
   onRenameEnd: () => void
   onChatRename: (id: number, newTitle: string) => void
+  onDeleteStart: (id: number) => void
 }
 
 function ChatItem({
@@ -47,7 +48,8 @@ function ChatItem({
   onMenuClose,
   onRenameStart,
   onRenameEnd,
-  onChatRename
+  onChatRename,
+  onDeleteStart
 }: ChatItemProps) {
   const chatItemRef = useRef<HTMLDivElement>(null)
   const [draftTitle, setDraftTitle] = useState(chat.title)
@@ -161,7 +163,11 @@ function ChatItem({
             Rename Chat
           </button>
 
-          <button className="chat-item__menu-item" type="button">
+          <button
+            className="chat-item__menu-item"
+            type="button"
+            onClick={() => onDeleteStart(chat.id)}
+          >
             Delete Chat
           </button>
         </div>

@@ -6,21 +6,63 @@
 // the "New Chat" button and the current user section.
 //
 // Receives:
-// None
+// - chats: the application's chat collection
+// - setChats: updates the application's chat collection
+// - onNewChat: requests creation of a new active chat
 //
 // Used by:
-// AppLayout
+// - AppLayout
 // -----------------------------------------------------------------------------
 
-import { useState } from 'react'
 import './Sidebar.scss'
 import ChatItem from '../ChatItem/ChatItem'
-import { initialChats } from '../../data/chats'
+import DeleteChatModal from '../DeleteChatModal/DeleteChatModal'
+import { useState } from 'react'
+import type { Chat } from '../../types/Chat'
+import type { Dispatch, SetStateAction } from 'react'
 
-function Sidebar() {
-  const [chats, setChats] = useState(initialChats)
+type SidebarProps = {
+  chats: Chat[]
+  setChats: Dispatch<SetStateAction<Chat[]>>
+  onNewChat: () => void
+}
+
+function Sidebar({ chats, setChats, onNewChat }: SidebarProps) {
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
   const [renamingChatId, setRenamingChatId] = useState<number | null>(null)
+  const [deletingChatId, setDeletingChatId] = useState<number | null>(null)
+
+  function handleDeleteStart(chatId: number) {
+    setDeletingChatId(chatId)
+    setOpenMenuChatId(null)
+    setRenamingChatId(null)
+  }
+
+  function handleDeleteCancel() {
+    setDeletingChatId(null)
+  }
+
+  function handleDeleteConfirm() {
+    if (deletingChatId === null) {
+      return
+    }
+
+    const deletedChat = chats.find((chat) => chat.id === deletingChatId)
+    const remainingChats = chats.filter((chat) => chat.id !== deletingChatId)
+
+    if (deletedChat?.isActive && remainingChats.length > 0) {
+      const updatedChats = remainingChats.map((chat, index) => ({
+        ...chat,
+        isActive: index === 0
+      }))
+
+      setChats(updatedChats)
+    } else {
+      setChats(remainingChats)
+    }
+
+    setDeletingChatId(null)
+  }
 
   function handleRenameStart(chatId: number) {
     setRenamingChatId(chatId)
@@ -65,21 +107,6 @@ function Sidebar() {
     setChats(updatedChats)
   }
 
-  function handleNewChat() {
-    const inactiveChats = chats.map((chat) => ({
-      ...chat,
-      isActive: false
-    }))
-
-    const newChat = {
-      id: Date.now(),
-      title: 'New Chat',
-      isActive: true
-    }
-
-    setChats([newChat, ...inactiveChats])
-  }
-
   return (
     <aside className="sidebar" aria-label="Chat navigation">
       <header className="sidebar__header">
@@ -89,7 +116,7 @@ function Sidebar() {
       <button
         className="sidebar__new-chat-button"
         type="button"
-        onClick={handleNewChat}
+        onClick={onNewChat}
       >
         New Chat
       </button>
@@ -110,10 +137,17 @@ function Sidebar() {
               onRenameStart={handleRenameStart}
               onRenameEnd={handleRenameEnd}
               onChatRename={handleChatRename}
+              onDeleteStart={handleDeleteStart}
             />
           ))}
         </div>
       </nav>
+
+      <DeleteChatModal
+        isOpen={deletingChatId !== null}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
 
       <footer className="sidebar__footer">
         <span className="sidebar__avatar" aria-hidden="true">
