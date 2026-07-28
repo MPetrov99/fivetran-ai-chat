@@ -20,6 +20,16 @@ import { initialChats } from '../../data/chats'
 function Sidebar() {
   const [chats, setChats] = useState(initialChats)
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
+  const [renamingChatId, setRenamingChatId] = useState<number | null>(null)
+
+  function handleRenameStart(chatId: number) {
+    setRenamingChatId(chatId)
+    setOpenMenuChatId(null)
+  }
+
+  function handleRenameEnd() {
+    setRenamingChatId(null)
+  }
 
   function handleMenuClose() {
     setOpenMenuChatId(null)
@@ -39,6 +49,20 @@ function Sidebar() {
 
     setChats(updatedChats)
     setOpenMenuChatId(null)
+    setRenamingChatId(null)
+  }
+
+  function handleChatRename(chatId: number, newTitle: string) {
+    const updatedChats = chats.map((chat) =>
+      chat.id === chatId
+        ? {
+            ...chat,
+            title: newTitle
+          }
+        : chat
+    )
+
+    setChats(updatedChats)
   }
 
   function handleNewChat() {
@@ -79,9 +103,13 @@ function Sidebar() {
               key={chat.id}
               chat={chat}
               isMenuOpen={openMenuChatId === chat.id}
+              isRenaming={renamingChatId === chat.id}
               onChatClick={handleChatClick}
               onMenuToggle={handleMenuToggle}
               onMenuClose={handleMenuClose}
+              onRenameStart={handleRenameStart}
+              onRenameEnd={handleRenameEnd}
+              onChatRename={handleChatRename}
             />
           ))}
         </div>
