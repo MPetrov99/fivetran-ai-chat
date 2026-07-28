@@ -19,6 +19,17 @@ import { initialChats } from '../../data/chats'
 
 function Sidebar() {
   const [chats, setChats] = useState(initialChats)
+  const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
+
+  function handleMenuClose() {
+    setOpenMenuChatId(null)
+  }
+
+  function handleMenuToggle(chatId: number) {
+    setOpenMenuChatId((currentOpenMenuChatId) =>
+      currentOpenMenuChatId === chatId ? null : chatId
+    )
+  }
 
   function handleChatClick(clickedChatId: number) {
     const updatedChats = chats.map((chat) => ({
@@ -27,6 +38,7 @@ function Sidebar() {
     }))
 
     setChats(updatedChats)
+    setOpenMenuChatId(null)
   }
 
   function handleNewChat() {
@@ -61,9 +73,18 @@ function Sidebar() {
       <nav className="sidebar__navigation" aria-label="Previous chats">
         <h2 className="sidebar__section-title">Recent Chats</h2>
 
-        {chats.map((chat) => (
-          <ChatItem key={chat.id} chat={chat} onChatClick={handleChatClick} />
-        ))}
+        <div className="sidebar__chat-list">
+          {chats.map((chat) => (
+            <ChatItem
+              key={chat.id}
+              chat={chat}
+              isMenuOpen={openMenuChatId === chat.id}
+              onChatClick={handleChatClick}
+              onMenuToggle={handleMenuToggle}
+              onMenuClose={handleMenuClose}
+            />
+          ))}
+        </div>
       </nav>
 
       <footer className="sidebar__footer">
