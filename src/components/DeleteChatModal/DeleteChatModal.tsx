@@ -14,6 +14,7 @@
 // -----------------------------------------------------------------------------
 
 import './DeleteChatModal.scss'
+import { useEffect } from 'react'
 
 type DeleteChatModalProps = {
   isOpen: boolean
@@ -26,12 +27,44 @@ function DeleteChatModal({
   onCancel,
   onConfirm
 }: DeleteChatModalProps) {
+  useEffect(() => {
+    if (!isOpen) {
+      return
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.repeat) {
+        return
+      }
+
+      if (event.key === 'Escape') {
+        onCancel()
+      }
+
+      if (event.key === 'Enter') {
+        onConfirm()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen, onCancel, onConfirm])
+
+  function handleBackdropClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (event.target === event.currentTarget) {
+      onCancel()
+    }
+  }
+
   if (!isOpen) {
     return null
   }
 
   return (
-    <div className="delete-chat-modal">
+    <div className="delete-chat-modal" onClick={handleBackdropClick}>
       <div
         className="delete-chat-modal__dialog"
         role="dialog"
@@ -40,15 +73,14 @@ function DeleteChatModal({
         aria-describedby="delete-chat-modal-description"
       >
         <h2 className="delete-chat-modal__title" id="delete-chat-modal-title">
-          Delete Chat
+          Delete chat?
         </h2>
 
         <p
           className="delete-chat-modal__description"
           id="delete-chat-modal-description"
         >
-          This action cannot be undone. The chat and all of its messages will be
-          permanently deleted.
+          This action cannot be undone.
         </p>
 
         <div className="delete-chat-modal__actions">

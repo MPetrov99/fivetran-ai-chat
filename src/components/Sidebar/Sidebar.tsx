@@ -7,8 +7,10 @@
 //
 // Receives:
 // - chats: the application's chat collection
-// - setChats: updates the application's chat collection
 // - onNewChat: requests creation of a new active chat
+// - onChatSelect: requests activation of a selected chat
+// - onChatRename: requests an update to a chat title
+// - onChatDelete: requests deletion of a chat
 //
 // Used by:
 // - AppLayout
@@ -19,18 +21,31 @@ import ChatItem from '../ChatItem/ChatItem'
 import DeleteChatModal from '../DeleteChatModal/DeleteChatModal'
 import { useState } from 'react'
 import type { Chat } from '../../types/Chat'
-import type { Dispatch, SetStateAction } from 'react'
 
 type SidebarProps = {
   chats: Chat[]
-  setChats: Dispatch<SetStateAction<Chat[]>>
   onNewChat: () => void
+  onChatSelect: (id: number) => void
+  onChatRename: (id: number, newTitle: string) => void
+  onChatDelete: (id: number) => void
 }
 
-function Sidebar({ chats, setChats, onNewChat }: SidebarProps) {
+function Sidebar({
+  chats,
+  onNewChat,
+  onChatSelect,
+  onChatRename,
+  onChatDelete
+}: SidebarProps) {
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
   const [renamingChatId, setRenamingChatId] = useState<number | null>(null)
   const [deletingChatId, setDeletingChatId] = useState<number | null>(null)
+
+  function handleChatClick(clickedChatId: number) {
+    onChatSelect(clickedChatId)
+    setOpenMenuChatId(null)
+    setRenamingChatId(null)
+  }
 
   function handleDeleteStart(chatId: number) {
     setDeletingChatId(chatId)
@@ -47,20 +62,7 @@ function Sidebar({ chats, setChats, onNewChat }: SidebarProps) {
       return
     }
 
-    const deletedChat = chats.find((chat) => chat.id === deletingChatId)
-    const remainingChats = chats.filter((chat) => chat.id !== deletingChatId)
-
-    if (deletedChat?.isActive && remainingChats.length > 0) {
-      const updatedChats = remainingChats.map((chat, index) => ({
-        ...chat,
-        isActive: index === 0
-      }))
-
-      setChats(updatedChats)
-    } else {
-      setChats(remainingChats)
-    }
-
+    onChatDelete(deletingChatId)
     setDeletingChatId(null)
   }
 
@@ -81,30 +83,6 @@ function Sidebar({ chats, setChats, onNewChat }: SidebarProps) {
     setOpenMenuChatId((currentOpenMenuChatId) =>
       currentOpenMenuChatId === chatId ? null : chatId
     )
-  }
-
-  function handleChatClick(clickedChatId: number) {
-    const updatedChats = chats.map((chat) => ({
-      ...chat,
-      isActive: chat.id === clickedChatId
-    }))
-
-    setChats(updatedChats)
-    setOpenMenuChatId(null)
-    setRenamingChatId(null)
-  }
-
-  function handleChatRename(chatId: number, newTitle: string) {
-    const updatedChats = chats.map((chat) =>
-      chat.id === chatId
-        ? {
-            ...chat,
-            title: newTitle
-          }
-        : chat
-    )
-
-    setChats(updatedChats)
   }
 
   return (
@@ -136,7 +114,7 @@ function Sidebar({ chats, setChats, onNewChat }: SidebarProps) {
               onMenuClose={handleMenuClose}
               onRenameStart={handleRenameStart}
               onRenameEnd={handleRenameEnd}
-              onChatRename={handleChatRename}
+              onChatRename={onChatRename}
               onDeleteStart={handleDeleteStart}
             />
           ))}
