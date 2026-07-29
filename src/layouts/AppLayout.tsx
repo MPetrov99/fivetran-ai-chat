@@ -61,28 +61,49 @@ function AppLayout() {
       )
     )
 
-    const assistantContent = await getAssistantResponse(content)
+    try {
+      const assistantContent = await getAssistantResponse(content)
 
-    const assistantMessage: Message = {
-      id: Date.now(),
-      role: 'assistant',
-      content: assistantContent
-    }
+      const assistantMessage: Message = {
+        id: Date.now(),
+        role: 'assistant',
+        content: assistantContent
+      }
 
-    setChats((currentChats) =>
-      currentChats.map((chat) =>
-        chat.id === submittedChatId
-          ? {
-              ...chat,
-              messages: [...chat.messages, assistantMessage]
-            }
-          : chat
+      setChats((currentChats) =>
+        currentChats.map((chat) =>
+          chat.id === submittedChatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, assistantMessage]
+              }
+            : chat
+        )
       )
-    )
+    } catch (error) {
+      console.error('Failed to get assistant response:', error)
 
-    setLoadingChatIds((currentLoadingChatIds) =>
-      currentLoadingChatIds.filter((chatId) => chatId !== submittedChatId)
-    )
+      const errorMessage: Message = {
+        id: Date.now(),
+        role: 'assistant',
+        content: 'Something went wrong. Please try again.'
+      }
+
+      setChats((currentChats) =>
+        currentChats.map((chat) =>
+          chat.id === submittedChatId
+            ? {
+                ...chat,
+                messages: [...chat.messages, errorMessage]
+              }
+            : chat
+        )
+      )
+    } finally {
+      setLoadingChatIds((currentLoadingChatIds) =>
+        currentLoadingChatIds.filter((chatId) => chatId !== submittedChatId)
+      )
+    }
   }
 
   function handleChatDelete(chatId: number) {
