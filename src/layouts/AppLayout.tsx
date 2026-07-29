@@ -19,9 +19,11 @@ import { useState } from 'react'
 import { initialChats } from '../data/chats'
 import type { Chat } from '../types/Chat'
 import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
+import ChatArea from '../components/ChatArea/ChatArea'
 
 function AppLayout() {
   const [chats, setChats] = useState<Chat[]>(initialChats)
+  const activeChat = chats.find((chat) => chat.isActive)
 
   function handleChatDelete(chatId: number) {
     setChats((currentChats) => {
@@ -94,8 +96,7 @@ function AppLayout() {
         {chats.length === 0 ? (
           <EmptyChatState onNewChat={handleNewChat} />
         ) : (
-          // Temporary placeholder
-          <p>Chat content goes here.</p>
+          <ChatArea chat={activeChat} />
         )}
       </main>
     </div>
