@@ -20,10 +20,70 @@ import { initialChats } from '../data/chats'
 import type { Chat } from '../types/Chat'
 import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
 import ChatArea from '../components/ChatArea/ChatArea'
+import type { Message } from '../types/Message'
+import { getAssistantResponse } from '../services/chatService'
 
 function AppLayout() {
   const [chats, setChats] = useState<Chat[]>(initialChats)
   const activeChat = chats.find((chat) => chat.isActive)
+  const [loadingChatIds, setLoadingChatIds] = useState<number[]>([])
+  const isActiveChatLoading = activeChat
+    ? loadingChatIds.includes(activeChat.id)
+    : false
+
+  async function handleMessageSubmit(content: string) {
+    const submittedChatId = activeChat?.id
+
+    if (submittedChatId === undefined) {
+      return
+    }
+
+    const newMessage: Message = {
+      id: Date.now(),
+      role: 'user',
+      content
+    }
+
+    setLoadingChatIds((currentLoadingChatIds) =>
+      currentLoadingChatIds.includes(submittedChatId)
+        ? currentLoadingChatIds
+        : [...currentLoadingChatIds, submittedChatId]
+    )
+
+    setChats((currentChats) =>
+      currentChats.map((chat) =>
+        chat.id === submittedChatId
+          ? {
+              ...chat,
+              messages: [...chat.messages, newMessage]
+            }
+          : chat
+      )
+    )
+
+    const assistantContent = await getAssistantResponse(content)
+
+    const assistantMessage: Message = {
+      id: Date.now(),
+      role: 'assistant',
+      content: assistantContent
+    }
+
+    setChats((currentChats) =>
+      currentChats.map((chat) =>
+        chat.id === submittedChatId
+          ? {
+              ...chat,
+              messages: [...chat.messages, assistantMessage]
+            }
+          : chat
+      )
+    )
+
+    setLoadingChatIds((currentLoadingChatIds) =>
+      currentLoadingChatIds.filter((chatId) => chatId !== submittedChatId)
+    )
+  }
 
   function handleChatDelete(chatId: number) {
     setChats((currentChats) => {
@@ -67,7 +127,8 @@ function AppLayout() {
     const newChat: Chat = {
       id: Date.now(),
       title: 'New Chat',
-      isActive: true
+      isActive: true,
+      messages: []
     }
 
     setChats((currentChats) => {
@@ -93,10 +154,14 @@ function AppLayout() {
       </aside>
 
       <main className="app-layout__main">
-        {chats.length === 0 ? (
-          <EmptyChatState onNewChat={handleNewChat} />
+        {activeChat ? (
+          <ChatArea
+            chat={activeChat}
+            isLoading={isActiveChatLoading}
+            onMessageSubmit={handleMessageSubmit}
+          />
         ) : (
-          <ChatArea chat={activeChat} />
+          <EmptyChatState onNewChat={handleNewChat} />
         )}
       </main>
     </div>

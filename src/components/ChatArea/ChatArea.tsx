@@ -18,19 +18,27 @@ import ChatInput from '../ChatInput/ChatInput'
 import type { Chat } from '../../types/Chat'
 
 type ChatAreaProps = {
-  chat: Chat | undefined
+  chat: Chat
+  isLoading: boolean
+  onMessageSubmit: (message: string) => void
 }
 
-function ChatArea({ chat }: ChatAreaProps) {
-  function handleMessageSubmit(message: string) {
-    console.log('Submitted message:', message)
-  }
-
+function ChatArea({ chat, isLoading, onMessageSubmit }: ChatAreaProps) {
   return (
     <section className="chat-area" aria-label="Active chat">
-      <ChatHeader title={chat?.title ?? 'Untitled Chat'} />
-      <ChatMessages />
-      <ChatInput onMessageSubmit={handleMessageSubmit} />
+      <ChatHeader title={chat.title} />
+
+      <ChatMessages
+        chatId={chat.id}
+        messages={chat.messages}
+        isLoading={isLoading}
+      />
+
+      <ChatInput
+        key={chat.id}
+        isLoading={isLoading}
+        onMessageSubmit={onMessageSubmit}
+      />
     </section>
   )
 }

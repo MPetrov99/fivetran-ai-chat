@@ -16,10 +16,11 @@ import { useRef, useState } from 'react'
 import type { ChangeEvent, KeyboardEvent, SubmitEvent } from 'react'
 
 type ChatInputProps = {
+  isLoading: boolean
   onMessageSubmit: (message: string) => void
 }
 
-function ChatInput({ onMessageSubmit }: ChatInputProps) {
+function ChatInput({ isLoading, onMessageSubmit }: ChatInputProps) {
   const [message, setMessage] = useState('')
   const trimmedMessage = message.trim()
   const isSubmitDisabled = trimmedMessage.length === 0
@@ -61,6 +62,7 @@ function ChatInput({ onMessageSubmit }: ChatInputProps) {
     <footer className="chat-input">
       <form className="chat-input__form" onSubmit={handleSubmit}>
         <textarea
+          disabled={isLoading}
           ref={textareaRef}
           className="chat-input__textarea"
           value={message}
@@ -74,7 +76,7 @@ function ChatInput({ onMessageSubmit }: ChatInputProps) {
         <button
           className="chat-input__submit-button"
           type="submit"
-          disabled={isSubmitDisabled}
+          disabled={!message.trim() || isLoading}
         >
           Send
         </button>
