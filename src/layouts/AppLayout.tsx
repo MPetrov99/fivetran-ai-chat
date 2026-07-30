@@ -32,17 +32,19 @@ function AppLayout() {
     : false
 
   async function handleMessageSubmit(content: string) {
-    const submittedChatId = activeChat?.id
-
-    if (submittedChatId === undefined) {
+    if (!activeChat) {
       return
     }
+
+    const submittedChatId = activeChat.id
 
     const newMessage: Message = {
       id: Date.now(),
       role: 'user',
       content
     }
+
+    const conversationForAI = [...activeChat.messages, newMessage]
 
     setLoadingChatIds((currentLoadingChatIds) =>
       currentLoadingChatIds.includes(submittedChatId)
@@ -55,14 +57,14 @@ function AppLayout() {
         chat.id === submittedChatId
           ? {
               ...chat,
-              messages: [...chat.messages, newMessage]
+              messages: conversationForAI
             }
           : chat
       )
     )
 
     try {
-      const assistantContent = await getAssistantResponse(content)
+      const assistantContent = await getAssistantResponse(conversationForAI)
 
       const assistantMessage: Message = {
         id: Date.now(),

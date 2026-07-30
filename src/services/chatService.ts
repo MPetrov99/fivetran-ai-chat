@@ -1,3 +1,5 @@
+import type { Message } from '../types/Message'
+
 const API_URL = 'http://localhost:3001/api/chat'
 
 type ChatResponse = {
@@ -9,13 +11,16 @@ type ErrorResponse = {
 }
 
 export async function getAssistantResponse(
-  userMessage: string
+  messages: Message[]
 ): Promise<string> {
-  const trimmedMessage = userMessage.trim()
-
-  if (!trimmedMessage) {
-    throw new Error('A user message is required.')
+  if (messages.length === 0) {
+    throw new Error('At least one message is required.')
   }
+
+  const conversation = messages.map(({ role, content }) => ({
+    role,
+    content: content.trim()
+  }))
 
   const response = await fetch(API_URL, {
     method: 'POST',
@@ -23,7 +28,7 @@ export async function getAssistantResponse(
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      message: trimmedMessage
+      messages: conversation
     })
   })
 

@@ -6,6 +6,15 @@ import { openai } from './config/openai.js'
 const app = express()
 const PORT = 3001
 
+type ChatMessage = {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+type ChatRequestBody = {
+  messages?: unknown
+}
+
 console.log('OpenAI API key loaded:', process.env.OPENAI_API_KEY ? 'Yes' : 'No')
 
 app.use(
@@ -24,22 +33,53 @@ app.get('/api/health', (_request, response) => {
 })
 
 app.post('/api/chat', async (request, response) => {
-  const { message } = request.body as {
-    message?: unknown
-  }
+  const { messages } = request.body as ChatRequestBody
 
-  if (typeof message !== 'string' || !message.trim()) {
+  if (!Array.isArray(messages) || messages.length === 0) {
     response.status(400).json({
-      error: 'A valid message is required.'
+      error: 'At least one message is required.'
     })
 
     return
   }
 
+  const hasInvalidMessage = messages.some((message) => {
+    if (typeof message !== 'object' || message === null) {
+      return true
+    }
+
+    if (!('role' in message) || !('content' in message)) {
+      return true
+    }
+
+    if (message.role !== 'user' && message.role !== 'assistant') {
+      return true
+    }
+
+    if (typeof message.content !== 'string') {
+      return true
+    }
+
+    return !message.content.trim()
+  })
+
+  if (hasInvalidMessage) {
+    response.status(400).json({
+      error: 'Every message must have a valid role and content.'
+    })
+
+    return
+  }
+
+  const conversation = messages as ChatMessage[]
+
   try {
     const openAIResponse = await openai.responses.create({
       model: 'gpt-5-mini',
-      input: message.trim()
+      input: conversation.map(({ role, content }) => ({
+        role,
+        content: content.trim()
+      }))
     })
 
     response.json({
