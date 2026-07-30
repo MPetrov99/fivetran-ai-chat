@@ -15,7 +15,7 @@
 
 import './AppLayout.scss'
 import Sidebar from '../components/Sidebar/Sidebar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { initialChats } from '../data/chats'
 import type { Chat } from '../types/Chat'
 import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
@@ -23,13 +23,31 @@ import ChatArea from '../components/ChatArea/ChatArea'
 import type { Message } from '../types/Message'
 import { getAssistantResponse } from '../services/chatService'
 
+const CHATS_STORAGE_KEY = 'ai-chat-chats'
+
 function AppLayout() {
-  const [chats, setChats] = useState<Chat[]>(initialChats)
+  const [chats, setChats] = useState<Chat[]>(() => {
+    const storedChats = localStorage.getItem(CHATS_STORAGE_KEY)
+
+    if (!storedChats) {
+      return initialChats
+    }
+
+    try {
+      return JSON.parse(storedChats) as Chat[]
+    } catch {
+      return initialChats
+    }
+  })
   const activeChat = chats.find((chat) => chat.isActive)
   const [loadingChatIds, setLoadingChatIds] = useState<number[]>([])
   const isActiveChatLoading = activeChat
     ? loadingChatIds.includes(activeChat.id)
     : false
+
+  useEffect(() => {
+    localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(chats))
+  }, [chats])
 
   async function handleMessageSubmit(content: string) {
     if (!activeChat) {
