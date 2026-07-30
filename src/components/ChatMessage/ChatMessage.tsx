@@ -1,3 +1,7 @@
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import type { Message } from '../../types/Message'
 import './ChatMessage.scss'
 
@@ -18,7 +22,30 @@ function ChatMessage({ message }: ChatMessageProps) {
       }`}
     >
       <div className="chat-message__content">
-        <p>{message.content}</p>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            code({ className, children }) {
+              const match = /language-(\w+)/.exec(className || '')
+
+              if (!match) {
+                return <code>{children}</code>
+              }
+
+              return (
+                <SyntaxHighlighter
+                  style={oneDark}
+                  language={match[1]}
+                  PreTag="div"
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              )
+            }
+          }}
+        >
+          {message.content}
+        </ReactMarkdown>
       </div>
     </article>
   )

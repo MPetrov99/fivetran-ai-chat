@@ -22,8 +22,10 @@ import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
 import ChatArea from '../components/ChatArea/ChatArea'
 import type { Message } from '../types/Message'
 import { getAssistantResponse } from '../services/chatService'
+import type { Theme } from '../types/Theme'
 
 const CHATS_STORAGE_KEY = 'ai-chat-chats'
+const THEME_STORAGE_KEY = 'ai-chat-theme'
 
 function AppLayout() {
   const [chats, setChats] = useState<Chat[]>(() => {
@@ -44,6 +46,16 @@ function AppLayout() {
   const isActiveChatLoading = activeChat
     ? loadingChatIds.includes(activeChat.id)
     : false
+  const [theme, setTheme] = useState<Theme>(() => {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
+
+    return storedTheme === 'dark' ? 'dark' : 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
 
   useEffect(() => {
     localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(chats))
@@ -126,6 +138,10 @@ function AppLayout() {
     }
   }
 
+  function handleThemeToggle() {
+    setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))
+  }
+
   function handleChatDelete(chatId: number) {
     setChats((currentChats) => {
       const deletedChat = currentChats.find((chat) => chat.id === chatId)
@@ -187,10 +203,12 @@ function AppLayout() {
       <aside className="app-layout__sidebar">
         <Sidebar
           chats={chats}
+          theme={theme}
           onNewChat={handleNewChat}
           onChatSelect={handleChatSelect}
           onChatRename={handleChatRename}
           onChatDelete={handleChatDelete}
+          onThemeToggle={handleThemeToggle}
         />
       </aside>
 

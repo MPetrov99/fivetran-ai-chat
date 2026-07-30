@@ -12,13 +12,73 @@
 
   &__content {
     max-width: 720px;
+    min-width: 0;
     padding: 12px 16px;
     border-radius: 12px;
+    overflow-wrap: anywhere;
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
 
     p {
-      margin: 0;
       white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    }
+
+    h1,
+    h2,
+    h3,
+    p,
+    ul,
+    ol,
+    blockquote,
+    table,
+    pre {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    ul,
+    ol {
+      padding-left: 24px;
+    }
+
+    blockquote {
+      padding-left: 12px;
+      border-left: 3px solid currentColor;
+    }
+
+    table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 6px 10px;
+      border: 1px solid var(--color-border);
+      text-align: left;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: monospace;
+    }
+
+    :not(pre) > code {
+      padding: 2px 4px;
+      border-radius: 4px;
+      background-color: var(--color-surface-hover);
     }
   }
 

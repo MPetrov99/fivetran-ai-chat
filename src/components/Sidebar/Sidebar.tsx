@@ -21,21 +21,26 @@ import ChatItem from '../ChatItem/ChatItem'
 import DeleteChatModal from '../DeleteChatModal/DeleteChatModal'
 import { useState } from 'react'
 import type { Chat } from '../../types/Chat'
+import type { Theme } from '../../types/Theme'
 
 type SidebarProps = {
   chats: Chat[]
+  theme: Theme
   onNewChat: () => void
   onChatSelect: (id: number) => void
   onChatRename: (id: number, newTitle: string) => void
   onChatDelete: (id: number) => void
+  onThemeToggle: () => void
 }
 
 function Sidebar({
   chats,
+  theme,
   onNewChat,
   onChatSelect,
   onChatRename,
-  onChatDelete
+  onChatDelete,
+  onThemeToggle
 }: SidebarProps) {
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
   const [renamingChatId, setRenamingChatId] = useState<number | null>(null)
@@ -128,11 +133,26 @@ function Sidebar({
       />
 
       <footer className="sidebar__footer">
-        <span className="sidebar__avatar" aria-hidden="true">
-          U
-        </span>
+        <div className="sidebar__user">
+          <span className="sidebar__avatar" aria-hidden="true">
+            U
+          </span>
 
-        <span className="sidebar__user-label">Guest</span>
+          <span className="sidebar__user-label">Guest</span>
+        </div>
+
+        <button
+          className="sidebar__theme-toggle"
+          type="button"
+          onClick={onThemeToggle}
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+        >
+          <span className="sidebar__theme-icon" aria-hidden="true">
+            {theme === 'light' ? '☾' : '☀'}
+          </span>
+
+          <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+        </button>
       </footer>
     </aside>
   )

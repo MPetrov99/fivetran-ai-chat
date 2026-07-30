@@ -31,8 +31,38 @@
   &__footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--color-border);
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease;
+
+    &:hover {
+      background-color: var(--color-surface-hover);
+    }
+  }
+
+  &__theme-icon {
+    font-size: 16px;
+    line-height: 1;
   }
 }
