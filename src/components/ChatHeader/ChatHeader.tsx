@@ -2,25 +2,52 @@
 // Component: ChatHeader
 //
 // Responsibility:
-// Displays the title of the currently active chat.
+// Displays the active chat title and conversation-level actions.
 //
 // Receives:
 // - title: the active chat title
+// - canClearConversation: whether the active conversation contains messages
+// - onClearConversation: requests clearing the active conversation
 //
 // Used by:
-// - ChatArea
+// - AppLayout
 // -----------------------------------------------------------------------------
 
+import { Trash2 } from 'lucide-react'
 import './ChatHeader.scss'
 
 type ChatHeaderProps = {
   title: string
+  canClearConversation: boolean
+  isLoading: boolean
+  onClearConversation: () => void
 }
 
-function ChatHeader({ title }: ChatHeaderProps) {
+function ChatHeader({
+  title,
+  canClearConversation,
+  isLoading,
+  onClearConversation
+}: ChatHeaderProps) {
   return (
     <header className="chat-header">
       <h2 className="chat-header__title">{title}</h2>
+
+      <button
+        className="chat-header__clear-button"
+        type="button"
+        aria-label="Clear conversation"
+        disabled={!canClearConversation || isLoading}
+        onClick={onClearConversation}
+      >
+        <Trash2
+          className="chat-header__clear-icon"
+          size={16}
+          aria-hidden="true"
+        />
+
+        <span className="chat-header__clear-label">Clear conversation</span>
+      </button>
     </header>
   )
 }

@@ -23,6 +23,7 @@ import type { Message } from '../types/Message'
 import { streamAssistantResponse } from '../services/chatService'
 import type { Theme } from '../types/Theme'
 import ChatHeader from '../components/ChatHeader/ChatHeader'
+import ClearConversationModal from '../components/ClearConversationModal/ClearConversationModal'
 
 const CHATS_STORAGE_KEY = 'ai-chat-chats'
 const THEME_STORAGE_KEY = 'ai-chat-theme'
@@ -52,6 +53,8 @@ function AppLayout() {
     return storedTheme === 'dark' ? 'dark' : 'light'
   })
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isClearConversationModalOpen, setIsClearConversationModalOpen] =
+    useState(false)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -158,6 +161,33 @@ function AppLayout() {
         currentLoadingChatIds.filter((chatId) => chatId !== submittedChatId)
       )
     }
+  }
+
+  function handleClearConversationClick() {
+    setIsClearConversationModalOpen(true)
+  }
+
+  function handleClearConversationCancel() {
+    setIsClearConversationModalOpen(false)
+  }
+
+  function handleClearConversationConfirm() {
+    if (!activeChat) {
+      return
+    }
+
+    setChats((currentChats) =>
+      currentChats.map((chat) =>
+        chat.id === activeChat.id
+          ? {
+              ...chat,
+              messages: []
+            }
+          : chat
+      )
+    )
+
+    setIsClearConversationModalOpen(false)
   }
 
   function handleSidebarClose() {
@@ -284,7 +314,14 @@ function AppLayout() {
       </nav>
 
       <main className="app-layout__main">
-        <ChatHeader title={activeChat?.title ?? 'AI Chat'} />
+        {activeChat && (
+          <ChatHeader
+            title={activeChat.title}
+            canClearConversation={Boolean(activeChat.messages.length)}
+            isLoading={isActiveChatLoading}
+            onClearConversation={handleClearConversationClick}
+          />
+        )}
 
         {activeChat ? (
           <ChatArea
@@ -296,6 +333,11 @@ function AppLayout() {
           <EmptyChatState onNewChat={handleNewChat} />
         )}
       </main>
+      <ClearConversationModal
+        isOpen={isClearConversationModalOpen}
+        onCancel={handleClearConversationCancel}
+        onConfirm={handleClearConversationConfirm}
+      />
     </div>
   )
 }
