@@ -254,18 +254,6 @@ npm test
 
 ---
 
-## Markdown Rendering
-
-![Markdown](./screenshots/markdown.png)
-
----
-
-## Mobile Layout
-
-![Mobile](./screenshots/mobile.png)
-
----
-
 # Future Improvements
 
 Potential future enhancements include:
