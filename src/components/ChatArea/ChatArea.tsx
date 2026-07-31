@@ -18,6 +18,7 @@ import './ChatArea.scss'
 import ChatMessages from '../ChatMessages/ChatMessages'
 import ChatInput from '../ChatInput/ChatInput'
 import type { Chat } from '../../types/Chat'
+import ConversationHelper from '../ConversationHelper/ConversationHelper'
 
 type ChatAreaProps = {
   chat: Chat
@@ -39,6 +40,8 @@ function ChatArea({
         messages={chat.messages}
         isLoading={isLoading}
       />
+
+      {chat.messages.length === 0 && <ConversationHelper />}
 
       <ChatInput
         key={chat.id}
