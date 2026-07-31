@@ -5,6 +5,8 @@
 // Allows the user to compose and submit a chat message.
 //
 // Receives:
+// - isLoading: disables input while the assistant response is loading
+// - shouldFocus: controls whether the textarea should receive focus
 // - onMessageSubmit: called when the user submits a non-empty message
 //
 // Used by:
@@ -12,15 +14,20 @@
 // -----------------------------------------------------------------------------
 
 import './ChatInput.scss'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, KeyboardEvent, SubmitEvent } from 'react'
 
 type ChatInputProps = {
   isLoading: boolean
+  focusTrigger: number
   onMessageSubmit: (message: string) => void
 }
 
-function ChatInput({ isLoading, onMessageSubmit }: ChatInputProps) {
+function ChatInput({
+  isLoading,
+  focusTrigger,
+  onMessageSubmit
+}: ChatInputProps) {
   const [message, setMessage] = useState('')
   const trimmedMessage = message.trim()
   const isSubmitDisabled = trimmedMessage.length === 0
@@ -57,6 +64,12 @@ function ChatInput({ isLoading, onMessageSubmit }: ChatInputProps) {
       event.currentTarget.form?.requestSubmit()
     }
   }
+
+  useEffect(() => {
+    if (!isLoading) {
+      textareaRef.current?.focus()
+    }
+  }, [focusTrigger, isLoading])
 
   return (
     <footer className="chat-input">

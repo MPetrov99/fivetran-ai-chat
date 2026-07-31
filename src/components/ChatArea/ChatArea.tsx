@@ -6,6 +6,9 @@
 //
 // Receives:
 // - chat: the currently active chat
+// - isLoading: indicates whether the assistant response is loading
+// - focusTrigger: changes whenever the textarea should receive focus
+// - onMessageSubmit: handles submitted user messages
 //
 // Used by:
 // - AppLayout
@@ -19,10 +22,16 @@ import type { Chat } from '../../types/Chat'
 type ChatAreaProps = {
   chat: Chat
   isLoading: boolean
+  focusTrigger: number
   onMessageSubmit: (message: string) => void
 }
 
-function ChatArea({ chat, isLoading, onMessageSubmit }: ChatAreaProps) {
+function ChatArea({
+  chat,
+  isLoading,
+  focusTrigger,
+  onMessageSubmit
+}: ChatAreaProps) {
   return (
     <section className="chat-area" aria-label="Active chat">
       <ChatMessages
@@ -34,6 +43,7 @@ function ChatArea({ chat, isLoading, onMessageSubmit }: ChatAreaProps) {
       <ChatInput
         key={chat.id}
         isLoading={isLoading}
+        focusTrigger={focusTrigger}
         onMessageSubmit={onMessageSubmit}
       />
     </section>

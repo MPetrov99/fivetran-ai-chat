@@ -56,6 +56,7 @@ function AppLayout() {
   })
   const activeChat = chats.find((chat) => chat.isActive)
   const [loadingChatIds, setLoadingChatIds] = useState<number[]>([])
+  const [focusTrigger, setFocusTrigger] = useState(0)
   const isActiveChatLoading = activeChat
     ? loadingChatIds.includes(activeChat.id)
     : false
@@ -298,6 +299,8 @@ function AppLayout() {
 
       return [newChat, ...inactiveChats]
     })
+
+    setFocusTrigger((currentTrigger) => currentTrigger + 1)
   }
 
   return (
@@ -372,6 +375,7 @@ function AppLayout() {
           <ChatArea
             chat={activeChat}
             isLoading={isActiveChatLoading}
+            focusTrigger={focusTrigger}
             onMessageSubmit={handleMessageSubmit}
           />
         ) : (
