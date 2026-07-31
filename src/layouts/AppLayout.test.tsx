@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import AppLayout from './AppLayout'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -135,7 +135,13 @@ describe('AppLayout', () => {
       })
     )
 
-    expect(screen.getByText('Hello assistant')).toBeInTheDocument()
+    const conversation = screen.getByRole('region', {
+      name: 'Conversation messages'
+    })
+
+    expect(
+      within(conversation).getByText('Hello assistant')
+    ).toBeInTheDocument()
 
     expect(await screen.findByText('Hello from AI')).toBeInTheDocument()
 

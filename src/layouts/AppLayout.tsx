@@ -28,6 +28,17 @@ import ClearAllConversationsModal from '../components/ClearAllConversationsModal
 
 const CHATS_STORAGE_KEY = 'ai-chat-chats'
 const THEME_STORAGE_KEY = 'ai-chat-theme'
+const CHAT_TITLE_MAX_LENGTH = 40
+
+function createChatTitle(message: string) {
+  const trimmedMessage = message.trim()
+
+  if (trimmedMessage.length <= CHAT_TITLE_MAX_LENGTH) {
+    return trimmedMessage
+  }
+
+  return trimmedMessage.substring(0, CHAT_TITLE_MAX_LENGTH - 3) + '...'
+}
 
 function AppLayout() {
   const [chats, setChats] = useState<Chat[]>(() => {
@@ -98,11 +109,14 @@ function AppLayout() {
         : [...currentLoadingChatIds, submittedChatId]
     )
 
+    const chatTitle = createChatTitle(content)
+
     setChats((currentChats) =>
       currentChats.map((chat) =>
         chat.id === submittedChatId
           ? {
               ...chat,
+              title: chat.title === 'New Chat' ? chatTitle : chat.title,
               messages: conversationForAI
             }
           : chat
