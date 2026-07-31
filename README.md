@@ -2,58 +2,80 @@
 
 A modern AI chat application built with **React**, **TypeScript**, and **Express** as part of the **Fivetran Front-End Engineer technical assignment**.
 
-The application allows users to create and manage multiple conversations, interact with OpenAI's GPT-5 Mini model, and persist chat history locally while keeping the API key securely on the backend.
+The application allows users to create and manage multiple AI conversations, interact with OpenAI's GPT-5 Mini model through a secure Express backend, and persist chat history locally between sessions.
 
 ---
 
-## Features
+# Features
 
-- 💬 Multiple chat sessions
+### Chat Experience
+
+- 💬 Multiple chat conversations
 - 🤖 OpenAI GPT-5 Mini integration
-- 📝 Conversation history
+- ⚡ Streaming AI responses
+- 📝 Automatic conversation titles
+- ✏️ Rename conversations
+- 🗑️ Delete conversations
+- 🧹 Clear individual conversations
+- 🧹 Clear all conversations
+
+### User Experience
+
 - 💾 LocalStorage persistence
+- 🌙 Light / Dark theme
 - 📄 Markdown rendering
 - 💻 Syntax-highlighted code blocks
-- 🌙 Light / Dark theme
-- ⏳ Loading and error states
+- 📋 Copy assistant responses
+- ⏳ Loading states
+- ⚠️ Error handling
 - 📱 Responsive layout
+
+### Engineering
+
 - 🔒 Secure Express backend proxy
-- ✅ Unit and integration tests
+- 🧪 Unit & integration tests
+- ♿ Semantic HTML & accessibility considerations
+- 🎯 Component-based architecture
+- 📦 Type-safe development with TypeScript
 
 ---
 
-## Highlights
+# Highlights
 
 This project demonstrates:
 
-- Component-based React architecture
-- Type-safe development with TypeScript
-- Secure client-server communication
-- Modern frontend testing with Vitest and React Testing Library
-- Clean separation between frontend and backend responsibilities
-- Responsive UI built with Sass
+- Modern React development with Hooks
+- Strong TypeScript usage throughout the application
+- Component composition and separation of concerns
+- Secure frontend-backend communication
+- Responsive UI built with Sass (SCSS)
+- Streaming API integration
+- Persistent application state
+- Modern testing using Vitest and React Testing Library
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Frontend
+## Frontend
 
 - React
 - TypeScript
 - Vite
 - Sass (SCSS)
 - React Markdown
+- Remark GFM
 - React Syntax Highlighter
+- Lucide React
 
-### Backend
+## Backend
 
 - Express
-- OpenAI API
+- OpenAI Responses API
 - dotenv
 - cors
 
-### Testing
+## Testing
 
 - Vitest
 - React Testing Library
@@ -61,27 +83,52 @@ This project demonstrates:
 
 ---
 
-## Design Decisions
+# Design Decisions
 
-### Express Backend
+## Express Backend
 
-Instead of calling the OpenAI API directly from the client, all requests are routed through an Express backend. This keeps the API key secure and prevents exposing sensitive credentials in the browser.
+Instead of exposing the OpenAI API key to the browser, every AI request is routed through an Express backend acting as a secure proxy.
 
-### LocalStorage Persistence
-
-Chat sessions are stored in LocalStorage so conversations remain available after refreshing or reopening the application.
-
-### Component-Based Architecture
-
-The application is organized into reusable React components with clear separation of responsibilities, making the codebase easier to maintain and extend.
-
-### Markdown Support
-
-AI responses are rendered as Markdown, allowing formatted text, lists, tables and syntax-highlighted code blocks for a better reading experience.
+This approach keeps sensitive credentials private while providing a clean separation between frontend and backend responsibilities.
 
 ---
 
-## Project Structure
+## Streaming Responses
+
+Assistant responses are streamed from the backend to the frontend, allowing users to see answers appear progressively instead of waiting for the full response.
+
+---
+
+## LocalStorage Persistence
+
+Conversations are automatically persisted in LocalStorage.
+
+This allows chat history, theme preference, and conversation state to survive page refreshes without requiring authentication or a database.
+
+---
+
+## Component-Based Architecture
+
+The application is divided into reusable React components with clearly defined responsibilities.
+
+This keeps the codebase maintainable while making new features easier to implement.
+
+---
+
+## Markdown Rendering
+
+Assistant responses support GitHub Flavored Markdown including:
+
+- headings
+- lists
+- tables
+- inline code
+- fenced code blocks
+- syntax highlighting
+
+---
+
+# Project Structure
 
 ```text
 .
@@ -92,12 +139,12 @@ AI responses are rendered as Markdown, allowing formatted text, lists, tables an
 ├── src
 │   ├── components
 │   ├── layouts
-│   ├── services
-│   ├── types
 │   ├── hooks
-│   ├── utils
+│   ├── services
 │   ├── styles
-│   └── test
+│   ├── test
+│   ├── types
+│   └── utils
 │
 ├── public
 └── README.md
@@ -105,36 +152,44 @@ AI responses are rendered as Markdown, allowing formatted text, lists, tables an
 
 ---
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 
-Before running the project, make sure you have installed:
+Before running the project, install:
 
-- Node.js (v20 or later recommended)
+- Node.js (v20+ recommended)
 - npm
-- An OpenAI API key
+- OpenAI API key
 
-### 1. Clone the repository
+---
+
+## 1. Clone the repository
 
 ```bash
 git clone <repository-url>
 ```
 
-### 2. Install frontend dependencies
+---
+
+## 2. Install frontend dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Install backend dependencies
+---
+
+## 3. Install backend dependencies
 
 ```bash
 cd server
 npm install
 ```
 
-### 4. Configure environment variables
+---
+
+## 4. Configure environment variables
 
 Create a `.env` file inside the `server` directory.
 
@@ -142,28 +197,32 @@ Create a `.env` file inside the `server` directory.
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-### 5. Start the backend
+---
+
+## 5. Start the backend
 
 ```bash
 cd server
 npm run dev
 ```
 
-The backend will run on:
+Runs on:
 
 ```
 http://localhost:3001
 ```
 
-### 6. Start the frontend
+---
 
-The frontend and backend run as separate development servers, so two terminal windows are required.
+## 6. Start the frontend
+
+Open a second terminal:
 
 ```bash
 npm run dev
 ```
 
-The frontend will run on:
+Runs on:
 
 ```
 http://localhost:5173
@@ -171,9 +230,9 @@ http://localhost:5173
 
 ---
 
-## Running Tests
+# Running Tests
 
-Run all unit and integration tests:
+Execute all tests:
 
 ```bash
 npm test
@@ -181,18 +240,42 @@ npm test
 
 ---
 
-## Future Improvements
+# Screenshots
 
-Some ideas that could further extend the project include:
+## Light Theme
 
-- Streaming AI responses
-- Conversation renaming
-- Conversation search
-- Export conversations
-- Authentication and cloud synchronization
-- Docker support
-- CI/CD pipeline with GitHub Actions
+![Light Theme](./screenshots/light-theme.png)
 
 ---
 
-## Screenshots
+## Dark Theme
+
+![Dark Theme](./screenshots/dark-theme.png)
+
+---
+
+## Markdown Rendering
+
+![Markdown](./screenshots/markdown.png)
+
+---
+
+## Mobile Layout
+
+![Mobile](./screenshots/mobile.png)
+
+---
+
+# Future Improvements
+
+Potential future enhancements include:
+
+- Conversation search
+- Export conversations
+- Authentication
+- Cloud synchronization
+- Docker support
+- CI/CD pipeline with GitHub Actions
+- Conversation folders
+- Prompt templates
+- Message editing & regeneration
