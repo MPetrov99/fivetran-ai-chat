@@ -2,10 +2,10 @@
 // Component: ChatLoadingIndicator
 //
 // Responsibility:
-// Shows that the assistant is preparing a response.
+// Displays a loading indicator while the assistant prepares a response.
 //
 // Receives:
-// None
+// - None
 //
 // Used by:
 // - ChatMessages

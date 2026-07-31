@@ -2,13 +2,14 @@
 // Component: ChatArea
 //
 // Responsibility:
-// Coordinates the active chat message area and message input section.
+// Coordinates the active conversation by rendering messages, conversation
+// guidance, and the message input.
 //
 // Receives:
 // - chat: the currently active chat
 // - isLoading: indicates whether the assistant response is loading
-// - focusTrigger: changes whenever the textarea should receive focus
-// - onMessageSubmit: handles submitted user messages
+// - focusTrigger: changes whenever the message input should receive focus
+// - onMessageSubmit: requests submission of a user message
 //
 // Used by:
 // - AppLayout

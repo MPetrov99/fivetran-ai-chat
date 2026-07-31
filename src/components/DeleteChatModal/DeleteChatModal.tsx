@@ -5,9 +5,9 @@
 // Displays a confirmation dialog before permanently deleting a chat.
 //
 // Receives:
-// - isOpen: whether the modal should be visible
-// - onCancel: called when the user cancels deletion
-// - onConfirm: called when the user confirms deletion
+// - isOpen: whether the modal is visible
+// - onCancel: requests closing the modal without deleting the chat
+// - onConfirm: requests deleting the selected chat
 //
 // Used by:
 // - Sidebar

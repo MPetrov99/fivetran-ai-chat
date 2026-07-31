@@ -1,3 +1,19 @@
+// -----------------------------------------------------------------------------
+// Component: ChatMessage
+//
+// Responsibility:
+// Displays a single chat message with role-specific styling, Markdown
+// rendering, syntax highlighting, and copy functionality for completed
+// assistant responses.
+//
+// Receives:
+// - message: the message to display
+// - isStreaming: whether this assistant message is currently streaming
+//
+// Used by:
+// - ChatMessages
+// -----------------------------------------------------------------------------
+
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -12,9 +28,6 @@ type ChatMessageProps = {
   isStreaming?: boolean
 }
 
-/**
- * Renders a single conversation message with role-specific styling.
- */
 function ChatMessage({ message, isStreaming = false }: ChatMessageProps) {
   const isUserMessage = message.role === 'user'
   const [isCopied, setIsCopied] = useState(false)

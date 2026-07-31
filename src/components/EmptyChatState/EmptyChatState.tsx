@@ -2,7 +2,7 @@
 // Component: EmptyChatState
 //
 // Responsibility:
-// Displays the application's empty state when no chats exist.
+// Displays the application's initial empty state when no chats exist.
 //
 // Receives:
 // - onNewChat: requests creation of a new chat

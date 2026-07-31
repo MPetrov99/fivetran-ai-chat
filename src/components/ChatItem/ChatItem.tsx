@@ -2,21 +2,20 @@
 // Component: ChatItem
 //
 // Responsibility:
-// Represents a single conversation entry inside the sidebar.
-// Handles temporary UI interactions such as opening the options menu
-// and editing the chat title, while delegating persistent state changes
-// back to Sidebar.
+// Displays a single conversation entry within the sidebar and provides
+// actions for selecting, renaming, and deleting a chat.
 //
 // Receives:
 // - chat: the conversation data displayed by this item
 // - isMenuOpen: whether this item's options menu is visible
 // - isRenaming: whether this chat is currently in rename mode
-// - onChatClick: notifies Sidebar which chat was selected
-// - onMenuToggle: asks Sidebar to open or close this item's options menu
-// - onMenuClose: asks Sidebar to close the currently open menu
-// - onRenameStart: notifies Sidebar that this chat entered rename mode
-// - onRenameEnd: notifies Sidebar that rename mode finished
-// - onChatRename: requests a title update for this chat
+// - onChatClick: requests activation of this chat
+// - onMenuToggle: requests opening or closing this item's options menu
+// - onMenuClose: requests closing the currently open menu
+// - onRenameStart: requests entering rename mode for this chat
+// - onRenameEnd: requests exiting rename mode
+// - onChatRename: requests updating this chat's title
+// - onDeleteStart: requests deletion of this chat
 //
 // Used by:
 // - Sidebar

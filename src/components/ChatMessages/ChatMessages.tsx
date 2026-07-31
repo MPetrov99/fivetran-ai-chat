@@ -2,11 +2,13 @@
 // Component: ChatMessages
 //
 // Responsibility:
-// Displays the messages belonging to the active chat.
+// Displays the messages belonging to the active conversation and manages
+// automatic scrolling during chat activity.
 //
 // Receives:
 // - chatId: the currently active chat identifier
 // - messages: the messages belonging to the active chat
+// - isLoading: indicates whether the assistant response is loading
 //
 // Used by:
 // - ChatArea

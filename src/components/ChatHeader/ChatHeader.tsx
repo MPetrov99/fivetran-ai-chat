@@ -7,6 +7,7 @@
 // Receives:
 // - title: the active chat title
 // - canClearConversation: whether the active conversation contains messages
+// - isLoading: indicates whether the assistant response is loading
 // - onClearConversation: requests clearing the active conversation
 //
 // Used by:

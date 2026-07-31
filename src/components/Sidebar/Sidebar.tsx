@@ -2,15 +2,22 @@
 // Component: Sidebar
 //
 // Responsibility:
-// Displays the application's navigation including recent chats,
-// the "New Chat" button and the current user section.
+// Displays the application's navigation, recent conversations, theme controls,
+// and chat management actions.
 //
 // Receives:
 // - chats: the application's chat collection
+// - theme: the currently active application theme
+// - isOpen: whether the mobile sidebar is open
+// - canCreateNewChat: whether creating a new chat is allowed
+// - canClearAllConversations: whether the "Clear All Conversations" action is available
 // - onNewChat: requests creation of a new active chat
 // - onChatSelect: requests activation of a selected chat
 // - onChatRename: requests an update to a chat title
 // - onChatDelete: requests deletion of a chat
+// - onClearAllConversations: requests clearing all conversations
+// - onThemeToggle: requests switching between light and dark themes
+// - onClose: requests closing the mobile sidebar
 //
 // Used by:
 // - AppLayout

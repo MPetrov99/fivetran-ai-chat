@@ -2,12 +2,13 @@
 // Component: ChatInput
 //
 // Responsibility:
-// Allows the user to compose and submit a chat message.
+// Allows the user to compose and submit chat messages while managing the
+// textarea's size and focus behavior.
 //
 // Receives:
 // - isLoading: disables input while the assistant response is loading
-// - shouldFocus: controls whether the textarea should receive focus
-// - onMessageSubmit: called when the user submits a non-empty message
+// - focusTrigger: changes whenever the message input should receive focus
+// - onMessageSubmit: requests submission of a non-empty user message
 //
 // Used by:
 // - ChatArea

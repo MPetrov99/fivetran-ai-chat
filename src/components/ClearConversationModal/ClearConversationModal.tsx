@@ -6,9 +6,9 @@
 // from the active conversation.
 //
 // Receives:
-// - isOpen: whether the modal should be visible
-// - onCancel: called when the user cancels clearing
-// - onConfirm: called when the user confirms clearing
+// - isOpen: whether the modal is visible
+// - onCancel: requests closing the modal without clearing the conversation
+// - onConfirm: requests clearing the active conversation
 //
 // Used by:
 // - AppLayout

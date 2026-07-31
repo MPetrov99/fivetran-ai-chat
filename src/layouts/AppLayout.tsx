@@ -2,12 +2,12 @@
 // Component: AppLayout
 //
 // Responsibility:
-// Coordinates the application's overall layout and shared chat state.
-// Renders the sidebar alongside the main content area and delegates
-// chat-related actions to child components through callback props.
+// Coordinates the application's overall layout, shared chat state, and user
+// interactions. Manages conversations, themes, persistence, and delegates UI
+// rendering to child components.
 //
 // Receives:
-// None
+// - None
 //
 // Used by:
 // - App

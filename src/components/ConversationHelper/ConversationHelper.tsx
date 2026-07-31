@@ -1,3 +1,17 @@
+// -----------------------------------------------------------------------------
+// Component: ConversationHelper
+//
+// Responsibility:
+// Displays a short prompt encouraging the user to start a new conversation
+// when the active chat contains no messages.
+//
+// Receives:
+// - None
+//
+// Used by:
+// - ChatArea
+// -----------------------------------------------------------------------------
+
 import './ConversationHelper.scss'
 
 function ConversationHelper() {
