@@ -9,6 +9,10 @@
   --color-primary: #6d4aff;
   --color-primary-hover: #5d3ce0;
   --color-danger: #d64545;
+  --color-text-on-primary: #ffffff;
+  --color-scrollbar-track: transparent;
+  --color-scrollbar-thumb: #b7bfce;
+  --color-scrollbar-thumb-hover: #8d98aa;
 }
 
 [data-theme='dark'] {
@@ -22,4 +26,8 @@
   --color-primary: #7c5cff;
   --color-primary-hover: #6c4de8;
   --color-danger: #ff6b6b;
+  --color-text-on-primary: #ffffff;
+  --color-scrollbar-track: transparent;
+  --color-scrollbar-thumb: #3b4a63;
+  --color-scrollbar-thumb-hover: #53647f;
 }

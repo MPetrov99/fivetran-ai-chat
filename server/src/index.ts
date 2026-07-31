@@ -15,8 +15,6 @@ type ChatRequestBody = {
   messages?: unknown
 }
 
-console.log('OpenAI API key loaded:', process.env.OPENAI_API_KEY ? 'Yes' : 'No')
-
 app.use(
   cors({
     origin: 'http://localhost:5173'

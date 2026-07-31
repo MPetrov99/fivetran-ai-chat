@@ -15,6 +15,7 @@
 
 import './DeleteChatModal.scss'
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 type DeleteChatModalProps = {
   isOpen: boolean
@@ -63,8 +64,12 @@ function DeleteChatModal({
     return null
   }
 
-  return (
-    <div className="delete-chat-modal" onClick={handleBackdropClick}>
+  return createPortal(
+    <div
+      className="delete-chat-modal"
+      role="presentation"
+      onClick={handleBackdropClick}
+    >
       <div
         className="delete-chat-modal__dialog"
         role="dialog"
@@ -101,7 +106,8 @@ function DeleteChatModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

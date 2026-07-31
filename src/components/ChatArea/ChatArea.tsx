@@ -2,7 +2,7 @@
 // Component: ChatArea
 //
 // Responsibility:
-// Coordinates the active chat header, message area and message input section.
+// Coordinates the active chat message area and message input section.
 //
 // Receives:
 // - chat: the currently active chat
@@ -12,7 +12,6 @@
 // -----------------------------------------------------------------------------
 
 import './ChatArea.scss'
-import ChatHeader from '../ChatHeader/ChatHeader'
 import ChatMessages from '../ChatMessages/ChatMessages'
 import ChatInput from '../ChatInput/ChatInput'
 import type { Chat } from '../../types/Chat'
@@ -26,8 +25,6 @@ type ChatAreaProps = {
 function ChatArea({ chat, isLoading, onMessageSubmit }: ChatAreaProps) {
   return (
     <section className="chat-area" aria-label="Active chat">
-      <ChatHeader title={chat.title} />
-
       <ChatMessages
         chatId={chat.id}
         messages={chat.messages}

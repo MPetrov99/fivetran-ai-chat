@@ -29,7 +29,15 @@
     padding: 12px 20px;
     border: none;
     border-radius: 8px;
+    color: var(--color-text-on-primary);
+    background-color: var(--color-primary);
     font: inherit;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
   }
 }

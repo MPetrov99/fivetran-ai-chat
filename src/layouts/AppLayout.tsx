@@ -16,13 +16,13 @@
 import './AppLayout.scss'
 import Sidebar from '../components/Sidebar/Sidebar'
 import { useEffect, useState } from 'react'
-import { initialChats } from '../data/chats'
 import type { Chat } from '../types/Chat'
 import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
 import ChatArea from '../components/ChatArea/ChatArea'
 import type { Message } from '../types/Message'
 import { getAssistantResponse } from '../services/chatService'
 import type { Theme } from '../types/Theme'
+import ChatHeader from '../components/ChatHeader/ChatHeader'
 
 const CHATS_STORAGE_KEY = 'ai-chat-chats'
 const THEME_STORAGE_KEY = 'ai-chat-theme'
@@ -32,13 +32,13 @@ function AppLayout() {
     const storedChats = localStorage.getItem(CHATS_STORAGE_KEY)
 
     if (!storedChats) {
-      return initialChats
+      return []
     }
 
     try {
       return JSON.parse(storedChats) as Chat[]
     } catch {
-      return initialChats
+      return []
     }
   })
   const activeChat = chats.find((chat) => chat.isActive)
@@ -51,6 +51,7 @@ function AppLayout() {
 
     return storedTheme === 'dark' ? 'dark' : 'light'
   })
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -138,6 +139,14 @@ function AppLayout() {
     }
   }
 
+  function handleSidebarClose() {
+    setIsSidebarOpen(false)
+  }
+
+  function handleSidebarToggle() {
+    setIsSidebarOpen((currentState) => !currentState)
+  }
+
   function handleThemeToggle() {
     setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))
   }
@@ -200,19 +209,62 @@ function AppLayout() {
 
   return (
     <div className="app-layout">
-      <aside className="app-layout__sidebar">
+      <aside
+        className={`app-layout__sidebar ${
+          isSidebarOpen ? 'app-layout__sidebar--open' : ''
+        }`}
+      >
         <Sidebar
           chats={chats}
           theme={theme}
+          isOpen={isSidebarOpen}
           onNewChat={handleNewChat}
           onChatSelect={handleChatSelect}
           onChatRename={handleChatRename}
           onChatDelete={handleChatDelete}
           onThemeToggle={handleThemeToggle}
+          onClose={handleSidebarClose}
         />
       </aside>
 
+      <button
+        className={`app-layout__backdrop ${
+          isSidebarOpen ? 'app-layout__backdrop--visible' : ''
+        }`}
+        type="button"
+        aria-label="Close navigation"
+        onClick={handleSidebarClose}
+      />
+
+      <nav className="app-layout__mobile-rail" aria-label="Mobile navigation">
+        <button
+          className="app-layout__rail-button"
+          type="button"
+          aria-label="Open navigation"
+          onClick={handleSidebarToggle}
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
+
+        <div className="app-layout__rail-footer">
+          <button
+            className="app-layout__rail-button"
+            type="button"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            onClick={handleThemeToggle}
+          >
+            <span aria-hidden="true">{theme === 'light' ? '☾' : '☀'}</span>
+          </button>
+
+          <div className="app-layout__rail-user" aria-label="Guest user">
+            U
+          </div>
+        </div>
+      </nav>
+
       <main className="app-layout__main">
+        <ChatHeader title={activeChat?.title ?? 'AI Chat'} />
+
         {activeChat ? (
           <ChatArea
             chat={activeChat}

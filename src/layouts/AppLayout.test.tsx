@@ -19,8 +19,9 @@ describe('AppLayout', () => {
     render(<AppLayout />)
 
     expect(
-      screen.getByRole('button', {
-        name: 'New Chat'
+      screen.getByRole('heading', {
+        name: 'Start your first conversation',
+        level: 2
       })
     ).toBeInTheDocument()
   })
@@ -52,11 +53,11 @@ describe('AppLayout', () => {
 
     render(<AppLayout />)
 
-    await user.click(
-      screen.getByRole('button', {
-        name: 'New Chat'
-      })
-    )
+    const newChatButtons = screen.getAllByRole('button', {
+      name: 'New Chat'
+    })
+
+    await user.click(newChatButtons[0])
 
     expect(
       screen.getByRole('heading', {
@@ -87,11 +88,11 @@ describe('AppLayout', () => {
 
     render(<AppLayout />)
 
-    await user.click(
-      screen.getByRole('button', {
-        name: 'New Chat'
-      })
-    )
+    const newChatButtons = screen.getAllByRole('button', {
+      name: 'New Chat'
+    })
+
+    await user.click(newChatButtons[0])
 
     const storedChats = JSON.parse(
       localStorage.getItem('ai-chat-chats') ?? '[]'
@@ -111,7 +112,15 @@ describe('AppLayout', () => {
 
     render(<AppLayout />)
 
-    const messageInput = screen.getByRole('textbox')
+    const newChatButtons = screen.getAllByRole('button', {
+      name: 'New Chat'
+    })
+
+    await user.click(newChatButtons[0])
+
+    const messageInput = screen.getByRole('textbox', {
+      name: 'Message'
+    })
 
     await user.type(messageInput, 'Hello assistant')
 

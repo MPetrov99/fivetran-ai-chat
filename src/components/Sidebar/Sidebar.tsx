@@ -26,21 +26,25 @@ import type { Theme } from '../../types/Theme'
 type SidebarProps = {
   chats: Chat[]
   theme: Theme
+  isOpen: boolean
   onNewChat: () => void
-  onChatSelect: (id: number) => void
-  onChatRename: (id: number, newTitle: string) => void
-  onChatDelete: (id: number) => void
+  onChatSelect: (chatId: number) => void
+  onChatRename: (chatId: number, newTitle: string) => void
+  onChatDelete: (chatId: number) => void
   onThemeToggle: () => void
+  onClose: () => void
 }
 
 function Sidebar({
   chats,
   theme,
+  isOpen,
   onNewChat,
   onChatSelect,
   onChatRename,
   onChatDelete,
-  onThemeToggle
+  onThemeToggle,
+  onClose
 }: SidebarProps) {
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
   const [renamingChatId, setRenamingChatId] = useState<number | null>(null)
@@ -94,6 +98,17 @@ function Sidebar({
     <aside className="sidebar" aria-label="Chat navigation">
       <header className="sidebar__header">
         <h1 className="sidebar__title">AI Chat</h1>
+
+        {isOpen && (
+          <button
+            className="sidebar__close-button"
+            type="button"
+            onClick={onClose}
+            aria-label="Close sidebar"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+        )}
       </header>
 
       <button

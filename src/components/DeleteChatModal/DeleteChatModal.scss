@@ -5,15 +5,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
   background-color: rgba(0, 0, 0, 0.6);
 
   &__dialog {
     width: 100%;
     max-width: 420px;
     padding: 24px;
-
-    background-color: var(--color-surface);
     border-radius: 12px;
+    background-color: var(--color-surface);
+    box-sizing: border-box;
   }
 
   &__title {
@@ -28,5 +29,45 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
+  }
+
+  &__button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
+
+    &--cancel {
+      color: var(--color-text-primary);
+      background-color: var(--color-surface-secondary);
+
+      &:hover {
+        background-color: var(--color-surface-hover);
+      }
+    }
+
+    &--delete {
+      color: var(--color-text-on-primary);
+      background-color: var(--color-danger);
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .delete-chat-modal {
+    &__dialog {
+      padding: 20px;
+    }
+
+    &__actions {
+      gap: 8px;
+    }
   }
 }
