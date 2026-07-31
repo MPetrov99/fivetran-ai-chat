@@ -55,6 +55,11 @@ function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isClearConversationModalOpen, setIsClearConversationModalOpen] =
     useState(false)
+  const newestChat = chats[0]
+
+  const canCreateNewChat =
+    newestChat === undefined ||
+    newestChat.messages.some((message) => message.role === 'user')
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -241,6 +246,10 @@ function AppLayout() {
   }
 
   function handleNewChat() {
+    if (!canCreateNewChat) {
+      return
+    }
+
     const newChat: Chat = {
       id: Date.now(),
       title: 'New Chat',
@@ -269,6 +278,7 @@ function AppLayout() {
           chats={chats}
           theme={theme}
           isOpen={isSidebarOpen}
+          canCreateNewChat={canCreateNewChat}
           onNewChat={handleNewChat}
           onChatSelect={handleChatSelect}
           onChatRename={handleChatRename}

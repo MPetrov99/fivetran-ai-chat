@@ -49,6 +49,11 @@
     border-radius: 8px;
     background-color: transparent;
     cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
   &__navigation {

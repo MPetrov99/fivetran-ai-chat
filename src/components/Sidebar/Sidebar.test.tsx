@@ -25,11 +25,14 @@ function renderSidebar(
   const props: React.ComponentProps<typeof Sidebar> = {
     chats,
     theme: 'light',
+    isOpen: false,
+    canCreateNewChat: true,
     onNewChat: vi.fn(),
     onChatSelect: vi.fn(),
     onChatRename: vi.fn(),
     onChatDelete: vi.fn(),
     onThemeToggle: vi.fn(),
+    onClose: vi.fn(),
     ...overrides
   }
 
@@ -165,5 +168,17 @@ describe('Sidebar', () => {
         name: 'Delete chat?'
       })
     ).not.toBeInTheDocument()
+  })
+
+  it('disables the New Chat button when creation is not allowed', () => {
+    renderSidebar({
+      canCreateNewChat: false
+    })
+
+    expect(
+      screen.getByRole('button', {
+        name: 'New Chat'
+      })
+    ).toBeDisabled()
   })
 })

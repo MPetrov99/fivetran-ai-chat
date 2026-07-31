@@ -27,6 +27,7 @@ type SidebarProps = {
   chats: Chat[]
   theme: Theme
   isOpen: boolean
+  canCreateNewChat: boolean
   onNewChat: () => void
   onChatSelect: (chatId: number) => void
   onChatRename: (chatId: number, newTitle: string) => void
@@ -39,6 +40,7 @@ function Sidebar({
   chats,
   theme,
   isOpen,
+  canCreateNewChat,
   onNewChat,
   onChatSelect,
   onChatRename,
@@ -115,6 +117,7 @@ function Sidebar({
         className="sidebar__new-chat-button"
         type="button"
         onClick={onNewChat}
+        disabled={!canCreateNewChat}
       >
         New Chat
       </button>
