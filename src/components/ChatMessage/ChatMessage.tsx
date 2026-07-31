@@ -9,12 +9,13 @@ import './ChatMessage.scss'
 
 type ChatMessageProps = {
   message: Message
+  isStreaming?: boolean
 }
 
 /**
  * Renders a single conversation message with role-specific styling.
  */
-function ChatMessage({ message }: ChatMessageProps) {
+function ChatMessage({ message, isStreaming = false }: ChatMessageProps) {
   const isUserMessage = message.role === 'user'
   const [isCopied, setIsCopied] = useState(false)
   const handleCopy = async () => {
@@ -62,7 +63,7 @@ function ChatMessage({ message }: ChatMessageProps) {
         >
           {message.content}
         </ReactMarkdown>
-        {!isUserMessage && (
+        {!isUserMessage && !isStreaming && (
           <button
             type="button"
             className="chat-message__copy-button"

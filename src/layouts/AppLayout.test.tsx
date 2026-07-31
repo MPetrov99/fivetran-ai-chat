@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import AppLayout from './AppLayout'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getAssistantResponse } from '../services/chatService'
+import { streamAssistantResponse } from '../services/chatService'
 
 vi.mock('../services/chatService', () => ({
-  getAssistantResponse: vi.fn()
+  streamAssistantResponse: vi.fn()
 }))
 
 beforeEach(() => {
@@ -108,7 +108,12 @@ describe('AppLayout', () => {
   it('sends a message and renders the assistant response', async () => {
     const user = userEvent.setup()
 
-    vi.mocked(getAssistantResponse).mockResolvedValue('Hello from AI')
+    vi.mocked(streamAssistantResponse).mockImplementation(
+      async (_messages, onChunk) => {
+        onChunk('Hello from ')
+        onChunk('AI')
+      }
+    )
 
     render(<AppLayout />)
 
@@ -134,9 +139,9 @@ describe('AppLayout', () => {
 
     expect(await screen.findByText('Hello from AI')).toBeInTheDocument()
 
-    expect(getAssistantResponse).toHaveBeenCalledTimes(1)
+    expect(streamAssistantResponse).toHaveBeenCalledTimes(1)
 
-    const sentMessages = vi.mocked(getAssistantResponse).mock.calls[0][0]
+    const sentMessages = vi.mocked(streamAssistantResponse).mock.calls[0][0]
 
     expect(sentMessages).toEqual(
       expect.arrayContaining([

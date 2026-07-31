@@ -30,6 +30,7 @@ type ChatMessagesProps = {
 function ChatMessages({ chatId, messages, isLoading }: ChatMessagesProps) {
   const messagesRef = useRef<HTMLElement>(null)
   const previousChatIdRef = useRef(chatId)
+  const previousMessageCountRef = useRef(messages.length)
 
   useEffect(() => {
     const messagesElement = messagesRef.current
@@ -39,14 +40,24 @@ function ChatMessages({ chatId, messages, isLoading }: ChatMessagesProps) {
     }
 
     const didChatChange = previousChatIdRef.current !== chatId
+    const didMessageCountChange =
+      previousMessageCountRef.current !== messages.length
 
     messagesElement.scrollTo({
       top: messagesElement.scrollHeight,
-      behavior: didChatChange ? 'auto' : 'smooth'
+      behavior: didChatChange || !didMessageCountChange ? 'auto' : 'smooth'
     })
 
     previousChatIdRef.current = chatId
+    previousMessageCountRef.current = messages.length
   }, [chatId, messages, isLoading])
+
+  const lastMessage = messages[messages.length - 1]
+
+  const isWaitingForFirstChunk =
+    isLoading &&
+    lastMessage?.role === 'assistant' &&
+    lastMessage.content.length === 0
 
   return (
     <section
@@ -54,11 +65,21 @@ function ChatMessages({ chatId, messages, isLoading }: ChatMessagesProps) {
       className="chat-messages"
       aria-label="Conversation messages"
     >
-      {messages.map((message) => (
-        <ChatMessage key={message.id} message={message} />
-      ))}
+      {messages.map((message) =>
+        message.role === 'assistant' && message.content.length === 0 ? null : (
+          <ChatMessage
+            key={message.id}
+            message={message}
+            isStreaming={
+              isLoading &&
+              message.role === 'assistant' &&
+              message.id === lastMessage?.id
+            }
+          />
+        )
+      )}
 
-      {isLoading && <ChatLoadingIndicator />}
+      {isWaitingForFirstChunk && <ChatLoadingIndicator />}
     </section>
   )
 }

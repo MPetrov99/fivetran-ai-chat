@@ -72,23 +72,39 @@ app.post('/api/chat', async (request, response) => {
   const conversation = messages as ChatMessage[]
 
   try {
-    const openAIResponse = await openai.responses.create({
+    const stream = await openai.responses.create({
       model: 'gpt-5-mini',
       input: conversation.map(({ role, content }) => ({
         role,
         content: content.trim()
-      }))
+      })),
+      stream: true
     })
 
-    response.json({
-      message: openAIResponse.output_text
-    })
+    response.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    response.setHeader('Cache-Control', 'no-cache')
+    response.setHeader('Connection', 'keep-alive')
+    response.flushHeaders()
+
+    for await (const event of stream) {
+      if (event.type === 'response.output_text.delta') {
+        response.write(event.delta)
+      }
+    }
+
+    response.end()
   } catch (error) {
     console.error('OpenAI request failed:', error)
 
-    response.status(500).json({
-      error: 'The assistant could not generate a response.'
-    })
+    if (!response.headersSent) {
+      response.status(500).json({
+        error: 'The assistant could not generate a response.'
+      })
+
+      return
+    }
+
+    response.end()
   }
 })
 

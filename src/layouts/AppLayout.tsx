@@ -20,7 +20,7 @@ import type { Chat } from '../types/Chat'
 import EmptyChatState from '../components/EmptyChatState/EmptyChatState'
 import ChatArea from '../components/ChatArea/ChatArea'
 import type { Message } from '../types/Message'
-import { getAssistantResponse } from '../services/chatService'
+import { streamAssistantResponse } from '../services/chatService'
 import type { Theme } from '../types/Theme'
 import ChatHeader from '../components/ChatHeader/ChatHeader'
 
@@ -77,6 +77,8 @@ function AppLayout() {
 
     const conversationForAI = [...activeChat.messages, newMessage]
 
+    const assistantMessageId = Date.now() + 1
+
     setLoadingChatIds((currentLoadingChatIds) =>
       currentLoadingChatIds.includes(submittedChatId)
         ? currentLoadingChatIds
@@ -95,12 +97,10 @@ function AppLayout() {
     )
 
     try {
-      const assistantContent = await getAssistantResponse(conversationForAI)
-
       const assistantMessage: Message = {
-        id: Date.now(),
+        id: assistantMessageId,
         role: 'assistant',
-        content: assistantContent
+        content: ''
       }
 
       setChats((currentChats) =>
@@ -113,21 +113,42 @@ function AppLayout() {
             : chat
         )
       )
+
+      await streamAssistantResponse(conversationForAI, (chunk) => {
+        setChats((currentChats) =>
+          currentChats.map((chat) =>
+            chat.id === submittedChatId
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((message) =>
+                    message.id === assistantMessageId
+                      ? {
+                          ...message,
+                          content: message.content + chunk
+                        }
+                      : message
+                  )
+                }
+              : chat
+          )
+        )
+      })
     } catch (error) {
       console.error('Failed to get assistant response:', error)
-
-      const errorMessage: Message = {
-        id: Date.now(),
-        role: 'assistant',
-        content: 'Something went wrong. Please try again.'
-      }
 
       setChats((currentChats) =>
         currentChats.map((chat) =>
           chat.id === submittedChatId
             ? {
                 ...chat,
-                messages: [...chat.messages, errorMessage]
+                messages: chat.messages.map((message) =>
+                  message.id === assistantMessageId
+                    ? {
+                        ...message,
+                        content: 'Something went wrong. Please try again.'
+                      }
+                    : message
+                )
               }
             : chat
         )

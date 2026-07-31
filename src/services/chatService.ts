@@ -2,17 +2,14 @@ import type { Message } from '../types/Message'
 
 const API_URL = 'http://localhost:3001/api/chat'
 
-type ChatResponse = {
-  message: string
-}
-
 type ErrorResponse = {
   error?: string
 }
 
-export async function getAssistantResponse(
-  messages: Message[]
-): Promise<string> {
+export async function streamAssistantResponse(
+  messages: Message[],
+  onChunk: (chunk: string) => void
+): Promise<void> {
   if (messages.length === 0) {
     throw new Error('At least one message is required.')
   }
@@ -40,7 +37,32 @@ export async function getAssistantResponse(
     )
   }
 
-  const data = (await response.json()) as ChatResponse
+  if (!response.body) {
+    throw new Error('The assistant response could not be streamed.')
+  }
 
-  return data.message
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+
+  while (true) {
+    const { value, done } = await reader.read()
+
+    if (done) {
+      break
+    }
+
+    const chunk = decoder.decode(value, {
+      stream: true
+    })
+
+    if (chunk) {
+      onChunk(chunk)
+    }
+  }
+
+  const finalChunk = decoder.decode()
+
+  if (finalChunk) {
+    onChunk(finalChunk)
+  }
 }
