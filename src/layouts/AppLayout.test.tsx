@@ -74,11 +74,11 @@ describe('AppLayout', () => {
 
     expect(document.documentElement.dataset.theme).toBe('light')
 
-    await user.click(
-      screen.getByRole('button', {
-        name: 'Switch to dark theme'
-      })
-    )
+    const themeButtons = screen.getAllByRole('button', {
+      name: 'Switch to dark theme'
+    })
+
+    await user.click(themeButtons[0])
 
     expect(document.documentElement.dataset.theme).toBe('dark')
   })

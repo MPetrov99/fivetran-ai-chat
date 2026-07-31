@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import type { Message } from '../../types/Message'
+import { Check, Copy } from 'lucide-react'
 import './ChatMessage.scss'
 
 type ChatMessageProps = {
@@ -14,6 +16,20 @@ type ChatMessageProps = {
  */
 function ChatMessage({ message }: ChatMessageProps) {
   const isUserMessage = message.role === 'user'
+  const [isCopied, setIsCopied] = useState(false)
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message.content)
+
+      setIsCopied(true)
+
+      window.setTimeout(() => {
+        setIsCopied(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Failed to copy message:', error)
+    }
+  }
 
   return (
     <article
@@ -46,6 +62,20 @@ function ChatMessage({ message }: ChatMessageProps) {
         >
           {message.content}
         </ReactMarkdown>
+        {!isUserMessage && (
+          <button
+            type="button"
+            className="chat-message__copy-button"
+            onClick={handleCopy}
+          >
+            <>
+              {isCopied ? <Check size={16} /> : <Copy size={16} />}
+              <span className="chat-message__copy-label">
+                {isCopied ? 'Copied!' : 'Copy'}
+              </span>
+            </>
+          </button>
+        )}
       </div>
     </article>
   )

@@ -16,6 +16,7 @@
     padding: 12px 16px;
     border-radius: 12px;
     overflow-wrap: anywhere;
+    position: relative;
 
     > :first-child {
       margin-top: 0;
@@ -82,12 +83,53 @@
     }
   }
 
+  &__copy-button {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    background-color: transparent;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity 150ms ease 2000ms,
+      color 150ms ease,
+      background-color 150ms ease;
+
+    &:hover {
+      color: var(--color-text-primary);
+      background-color: var(--color-surface-hover);
+    }
+  }
+
   &--user &__content {
     color: var(--color-text-on-primary);
     background-color: var(--color-primary);
   }
 
   &--assistant &__content {
+    padding-bottom: 40px;
     background-color: var(--color-surface-secondary);
+    min-width: 100px;
+  }
+
+  &--assistant:hover &__copy-button,
+  &__copy-button:focus-visible {
+    opacity: 1;
+    transition-delay: 0ms;
+  }
+}
+
+@media (max-width: 576px) {
+  .chat-message__copy-label {
+    display: none;
   }
 }
