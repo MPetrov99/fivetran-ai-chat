@@ -250,7 +250,7 @@ npm test
 
 ## Dark Theme
 
-![Dark Theme](./screenshots/dark-theme.png)
+![Dark Theme](./screenshots/preview-2.png)
 
 ---
 
