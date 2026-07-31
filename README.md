@@ -244,7 +244,7 @@ npm test
 
 ## Light Theme
 
-![Light Theme](./screenshots/light-theme.png)
+![Light Theme](./screenshots/preview-1.png)
 
 ---
 
