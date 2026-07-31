@@ -158,4 +158,75 @@ describe('AppLayout', () => {
       ])
     )
   })
+
+  it('uses the first user message as the chat title', async () => {
+    const user = userEvent.setup()
+
+    vi.mocked(streamAssistantResponse).mockResolvedValue()
+
+    render(<AppLayout />)
+
+    await user.click(
+      screen.getAllByRole('button', {
+        name: 'New Chat'
+      })[0]
+    )
+
+    await user.type(
+      screen.getByRole('textbox', {
+        name: 'Message'
+      }),
+      'My first conversation'
+    )
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send'
+      })
+    )
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'My first conversation',
+        level: 2
+      })
+    ).toBeInTheDocument()
+  })
+
+  it('truncates long chat titles', async () => {
+    const user = userEvent.setup()
+
+    vi.mocked(streamAssistantResponse).mockResolvedValue()
+
+    render(<AppLayout />)
+
+    await user.click(
+      screen.getAllByRole('button', {
+        name: 'New Chat'
+      })[0]
+    )
+
+    const longMessage =
+      'This is a very long message that should become a truncated chat title'
+
+    await user.type(
+      screen.getByRole('textbox', {
+        name: 'Message'
+      }),
+      longMessage
+    )
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send'
+      })
+    )
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'This is a very long message that shou...',
+        level: 2
+      })
+    ).toBeInTheDocument()
+  })
 })
