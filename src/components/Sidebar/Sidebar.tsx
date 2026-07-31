@@ -22,6 +22,7 @@ import DeleteChatModal from '../DeleteChatModal/DeleteChatModal'
 import { useState } from 'react'
 import type { Chat } from '../../types/Chat'
 import type { Theme } from '../../types/Theme'
+import { Trash2 } from 'lucide-react'
 
 type SidebarProps = {
   chats: Chat[]
@@ -32,8 +33,10 @@ type SidebarProps = {
   onChatSelect: (chatId: number) => void
   onChatRename: (chatId: number, newTitle: string) => void
   onChatDelete: (chatId: number) => void
+  onClearAllConversations: () => void
   onThemeToggle: () => void
   onClose: () => void
+  canClearAllConversations: boolean
 }
 
 function Sidebar({
@@ -45,7 +48,9 @@ function Sidebar({
   onChatSelect,
   onChatRename,
   onChatDelete,
+  onClearAllConversations,
   onThemeToggle,
+  canClearAllConversations,
   onClose
 }: SidebarProps) {
   const [openMenuChatId, setOpenMenuChatId] = useState<number | null>(null)
@@ -151,26 +156,38 @@ function Sidebar({
       />
 
       <footer className="sidebar__footer">
-        <div className="sidebar__user">
-          <span className="sidebar__avatar" aria-hidden="true">
-            U
-          </span>
-
-          <span className="sidebar__user-label">Guest</span>
-        </div>
-
         <button
-          className="sidebar__theme-toggle"
+          className="sidebar__clear-all-button"
           type="button"
-          onClick={onThemeToggle}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          onClick={onClearAllConversations}
+          disabled={!canClearAllConversations}
         >
-          <span className="sidebar__theme-icon" aria-hidden="true">
-            {theme === 'light' ? '☾' : '☀'}
-          </span>
-
-          <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+          <Trash2 size={18} aria-hidden="true" />
+          <span>Clear All Conversations</span>
         </button>
+
+        <div className="sidebar__footer-bottom">
+          <div className="sidebar__user">
+            <span className="sidebar__avatar" aria-hidden="true">
+              U
+            </span>
+
+            <span className="sidebar__user-label">Guest</span>
+          </div>
+
+          <button
+            className="sidebar__theme-toggle"
+            type="button"
+            onClick={onThemeToggle}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          >
+            <span className="sidebar__theme-icon" aria-hidden="true">
+              {theme === 'light' ? '☾' : '☀'}
+            </span>
+
+            <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+          </button>
+        </div>
       </footer>
     </aside>
   )

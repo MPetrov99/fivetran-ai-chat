@@ -24,6 +24,7 @@ import { streamAssistantResponse } from '../services/chatService'
 import type { Theme } from '../types/Theme'
 import ChatHeader from '../components/ChatHeader/ChatHeader'
 import ClearConversationModal from '../components/ClearConversationModal/ClearConversationModal'
+import ClearAllConversationsModal from '../components/ClearAllConversationsModal/ClearAllConversationsModal'
 
 const CHATS_STORAGE_KEY = 'ai-chat-chats'
 const THEME_STORAGE_KEY = 'ai-chat-theme'
@@ -55,8 +56,12 @@ function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isClearConversationModalOpen, setIsClearConversationModalOpen] =
     useState(false)
+  const [
+    isClearAllConversationsModalOpen,
+    setIsClearAllConversationsModalOpen
+  ] = useState(false)
   const newestChat = chats[0]
-
+  const canClearAllConversations = chats.length > 0
   const canCreateNewChat =
     newestChat === undefined ||
     newestChat.messages.some((message) => message.role === 'user')
@@ -166,6 +171,20 @@ function AppLayout() {
         currentLoadingChatIds.filter((chatId) => chatId !== submittedChatId)
       )
     }
+  }
+
+  function handleClearAllConversationsClick() {
+    setIsClearAllConversationsModalOpen(true)
+  }
+
+  function handleClearAllConversationsCancel() {
+    setIsClearAllConversationsModalOpen(false)
+  }
+
+  function handleClearAllConversationsConfirm() {
+    setChats([])
+    setLoadingChatIds([])
+    setIsClearAllConversationsModalOpen(false)
   }
 
   function handleClearConversationClick() {
@@ -279,10 +298,12 @@ function AppLayout() {
           theme={theme}
           isOpen={isSidebarOpen}
           canCreateNewChat={canCreateNewChat}
+          canClearAllConversations={canClearAllConversations}
           onNewChat={handleNewChat}
           onChatSelect={handleChatSelect}
           onChatRename={handleChatRename}
           onChatDelete={handleChatDelete}
+          onClearAllConversations={handleClearAllConversationsClick}
           onThemeToggle={handleThemeToggle}
           onClose={handleSidebarClose}
         />
@@ -347,6 +368,11 @@ function AppLayout() {
         isOpen={isClearConversationModalOpen}
         onCancel={handleClearConversationCancel}
         onConfirm={handleClearConversationConfirm}
+      />
+      <ClearAllConversationsModal
+        isOpen={isClearAllConversationsModalOpen}
+        onCancel={handleClearAllConversationsCancel}
+        onConfirm={handleClearAllConversationsConfirm}
       />
     </div>
   )

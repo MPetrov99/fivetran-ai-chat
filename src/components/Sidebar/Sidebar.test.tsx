@@ -27,12 +27,14 @@ function renderSidebar(
     theme: 'light',
     isOpen: false,
     canCreateNewChat: true,
+    canClearAllConversations: true,
     onNewChat: vi.fn(),
     onChatSelect: vi.fn(),
     onChatRename: vi.fn(),
     onChatDelete: vi.fn(),
     onThemeToggle: vi.fn(),
     onClose: vi.fn(),
+    onClearAllConversations: vi.fn(),
     ...overrides
   }
 
